@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "maro-processor"
-version = "0.1.0"
-description = "Hybrid Native & OCR PDF Layout Extraction Engine"
+dynamic = ["version"]
+description = "Hybrid Multi-Modal Content Intelligence Platform for Native & OCR Data Extraction"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -22,7 +22,6 @@ classifiers = [
 dependencies = [
     "pydantic>=2.0.0",
     "numpy>=1.24.0",
-    "pdfplumber>=0.11.10",
 ]
 
 [project.optional-dependencies]
@@ -31,7 +30,7 @@ pdf-native = [
 ]
 pdf-ocr = [
     "pdfplumber>=0.11.0",
-    "paddlepaddle>=3.3.1",
+    "paddlepaddle>=2.6.0",
     "paddleocr>=2.7.0",
     "scikit-learn>=1.4.0",
     "opencv-python-headless>=4.9.0",
@@ -39,6 +38,7 @@ pdf-ocr = [
 ]
 all = [
     "pdfplumber>=0.11.0",
+    "paddlepaddle>=2.6.0",
     "paddleocr>=2.7.0",
     "scikit-learn>=1.4.0",
     "opencv-python-headless>=4.9.0",
@@ -46,8 +46,8 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.io"
-Repository = "https://github.com"
+Homepage = "https://marolai.github.io"
+Repository = "https://github.com/Maro-AI-Services/maro-processor"
 
 [tool.hatch.version]
 path = "src/maro_processor/__init__.py"

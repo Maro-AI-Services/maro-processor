@@ -98,7 +98,7 @@ def test_ocr_extraction():
     except ImportError:
         return
 
-    engine = PaddleOCREngine.get_instance()
+    engine = PaddleOCREngine()
     result = engine.extract_page(str(pdf_path), page_idx=0)
 
     assert result.page_number == 1
@@ -123,7 +123,7 @@ def test_router_ocr():
     router = SmartPDFExtractorRouter(
         pdf_path=str(pdf_path),
         native_engine=PdfPlumberNativeEngine(),
-        ocr_engine=PaddleOCREngine.get_instance(),
+        ocr_engine=PaddleOCREngine(),
     )
 
     assert router.detect_is_scanned() is True

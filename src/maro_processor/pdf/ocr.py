@@ -32,15 +32,17 @@ class PaddleOCREngine(BaseExtractorEngine):
     _instance = None
     _lock = threading.Lock()
 
-    @classmethod
-    def get_instance(cls, lang: str = "fr"):
+    def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
-                    cls._instance = cls(lang)
+                    cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self, lang: str = "fr"):
+        if hasattr(self, "_initialized"):
+            return
+        self._initialized = True
         self.lang = lang
         self.ocr = PaddleOCR(
             lang=lang,

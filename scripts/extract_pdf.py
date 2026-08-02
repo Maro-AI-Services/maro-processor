@@ -47,7 +47,7 @@ def demo_ocr_pipeline():
     router = SmartPDFExtractorRouter(
         pdf_path=SCAN_PDF,
         native_engine=PdfPlumberNativeEngine(),
-        ocr_engine=PaddleOCREngine.get_instance(),
+        ocr_engine=PaddleOCREngine(),
     )
 
     print(f"Scanned? {router.detect_is_scanned()}")
@@ -75,7 +75,7 @@ def demo_spatial_elements():
     for el in result.elements[:4]:
         print(f"  {el.text!r:30s}  x0={el.x0:6.1f}  y0={el.y0:6.1f}  x1={el.x1:6.1f}  y1={el.y1:6.1f}")
 
-    ocr_engine = PaddleOCREngine.get_instance()
+    ocr_engine = PaddleOCREngine()
     result = ocr_engine.extract_page(SCAN_PDF, page_idx=0)
     print(f"\nOCR — Page {result.page_number}:")
     for el in result.elements[:4]:
