@@ -51,3 +51,7 @@ Repository = "https://github.com/Maro-AI-Services/maro-processor"
 
 [tool.hatch.version]
 path = "src/maro_processor/__init__.py"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

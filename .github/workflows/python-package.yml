@@ -30,8 +30,9 @@ jobs:
     - name: Install Dependencies & Modular Package
       run: |
         python -m pip install --upgrade pip setuptools wheel
-        # Installs local package in editable mode with ALL optional dependencies
-        pip install -e .[all]
+        # Installs local package in editable mode with native PDF deps.
+        # OCR tests self-skip when PaddleOCR extras are not installed.
+        pip install -e .[pdf-native]
         pip install pytest
 
     - name: Run Test Suite via pytest
