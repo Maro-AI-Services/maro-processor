@@ -1,84 +1,86 @@
 # maro-processor
 
-`maro-processor` is a high-performance, multi-modal content intelligence platform built to transform unstructured media and documents into structured, production-ready assets. 
+![PyPI Version](https://img.shields.io/pypi/v/maro-processor)
 
-The core system handles complex data extraction pipelines locally, enforcing a **unified spatial JSON coordinate schema** across variable input tracks to guarantee data consistency for downstream AI, LLM, and database engines.
+`maro-processor` is a Python tool that helps you extract text and tables from PDFs. It works on both digital PDFs and scanned images.
+
+If a PDF has clean digital text, it reads it instantly. If the PDF is a scanned image or photo, it automatically switches to OCR mode. It also uses algorithms (**DBSCAN** and **RANSAC**) to straighten crooked pages and keep your columns and text layout perfectly aligned.
 
 ---
 
-## Key Features
+## Features
 
-- **Intelligent PDF Routing:** Automatically analyzes document properties on-the-fly to detect whether a page contains native digital vectors or scanned raw pixels.
-- **Unified Extraction API:** Enforces identical data structures (`PageExtractionResult`) regardless of the underlying extraction method used.
-- **Spatial Layout Preservation:** Uses custom machine learning clusters (**DBSCAN**) and structural line regression (**RANSAC**) to automatically detect page skew, correct text rotation, and output perfectly tab-aligned layout strings.
-- **Privacy-First & Air-Gapped:** Operates 100% locally on host hardware using optimized mobile model constraints. Zero data-tracking leak risks, zero recurring SaaS costs.
+- **Automatic Detection:** Automatically checks if your PDF has real text or if it is just a scanned image.
+- **Unified Output:** Gives you the exact same data structure (`PageExtractionResult`) whether it used native reading or OCR fallback.
+- **Layout Fixes:** Automatically straightens rotated pages and keeps text columns aligned using spatial clustering.
+- **100% Private & Local:** Everything runs entirely on your own computer. No data leaks, no cloud API bills.
 
 ---
 
 ## Installation
 
-`maro-processor` utilizes modular, light-weight entry footprints. Install only the exact processing dependencies your enterprise backend requires:
+You can install only the modules you need to save disk space:
 
 ```bash
-# Core & Native digital PDF parsing track only (Ultra-lightweight)
+# Digital PDFs only (Very lightweight)
 pip install maro-processor[pdf-native]
 
-# Document suite complete with local spatial OCR fallbacks (Scanned documents & images)
+# Digital + Scanned PDFs (Includes PaddleOCR and machine learning models)
 pip install maro-processor[pdf-ocr]
 
-# Full-stack deployment infrastructure (PDF + multi-modal engines)
+# Full package
 pip install maro-processor[all]
 ```
 
 ---
 
-## Quick Start (PDF Document Pipeline)
+## Quick Start
 
-Here is a reproducible workflow example demonstrating how to run the multi-strategy document routing engine:
+Here is how to process a PDF file automatically:
 
 ```python
 from maro_processor.pdf import SmartPDFExtractorRouter, PdfPlumberNativeEngine, PaddleOCREngine
 
-# 1. Initialize the intelligent router with pluggable extraction strategies
+# Initialize the router with your extraction tools
 router = SmartPDFExtractorRouter(
-    pdf_path="test-data/mixed_document.pdf",
+    pdf_path="invoice.pdf",
     native_engine=PdfPlumberNativeEngine(),
-    ocr_engine=PaddleOCREngine(), # Falls back cleanly if scanned layers are hit
+    ocr_engine=PaddleOCREngine(), # Falls back to OCR if the file is an image
 )
 
-print(f"Is scanned document template? {router.detect_is_scanned()}")
+print(f"Is this a scanned document? {router.detect_is_scanned()}")
 
-# 2. Iterate pages through the unified spatial extraction interface
+# Process your document page by page
 for page in router.process_document():
     print(f"\n--- Page {page.page_number} ({page.width:.0f}x{page.height:.0f}) ---")
-    print(f"Total Spatial Elements Tracked: {len(page.elements)}")
     
-    # 3. Project raw coordinate segments into a clean, layout-preserved string
-    structured_text = page.to_layout_text(char_width=6.5, line_height=12.0)
-    print(structured_text)
+    # Converts absolute coordinates into a readable text layout string
+    text = page.to_layout_text(char_width=6.5, line_height=12.0)
+    print(text)
 ```
 
 ---
 
-## 📁 Repository Taxonomy
+## Project Structure
 
 ```text
 src/maro_processor/
-├── __init__.py         # Global distribution metadata
-├── base.py             # Abstract structural execution contracts
-├── schemas.py          # Unified Pydantic v2 spatial mapping structures
+├── __init__.py         # Package version and metadata
+├── base.py             # Core engine interfaces
+├── schemas.py          # Pydantic data models for coordinate storage
 │
-├── pdf/                # --- PDF & Document Extraction Sub-Module ---
-│   ├── __init__.py     # Dependency safeguards & clean public imports
-│   ├── router.py       # Intelligent heuristic routing engine
-│   ├── native.py       # Local pdfplumber vector stream wrapper
-│   ├── ocr.py          # Memory-optimized PaddleOCR mobile instance
-│   └── utils.py        # DBSCAN spatial clustering & RANSAC skew
+├── pdf/                # --- PDF Sub-Module ---
+│   ├── __init__.py     # Clean imports and fallback checks
+│   ├── router.py       # Scanned vs digital detection logic
+│   ├── native.py       # Wrapper for pdfplumber
+│   ├── ocr.py          # Memory-optimized PaddleOCR engine
+│   └── utils.py        # DBSCAN row sorting and RANSAC angle fixing
 ```
 
 ---
 
-## ⚖️ License
+## License
 
-Distributed under the **MIT License**. See `LICENSE` file for more details.
+Distributed under the **MIT License**. See the `LICENSE` file in this repository for more details.
+
 
